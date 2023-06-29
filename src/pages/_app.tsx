@@ -6,6 +6,7 @@ import "~/styles/globals.css";
 import Head from "next/head";
 import { SideNav } from "~/components/SideNav";
 import { NewTweetForm } from "~/components/NewTweetForm";
+import { RecentTweets } from "~/components/RecentTweets";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -22,7 +23,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <SideNav/>
         <div className="min-h-screen flex-grow border-x">
           <Component {...pageProps} />
-          <NewTweetForm/>
         </div>
       </div>
       
