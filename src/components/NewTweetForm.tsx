@@ -20,7 +20,9 @@ function Form() {
     }, []);
 
     useLayoutEffect(() => {
-        updateTextAreaSize(textAreaRef.current);
+        if (textAreaRef.current) {
+            updateTextAreaSize(textAreaRef.current);
+        }
     },[inputValue]);
 
     if(session.status !== "authenticated") return null;
