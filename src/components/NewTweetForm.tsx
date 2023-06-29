@@ -3,8 +3,8 @@ import { Button } from "./Button";
 import { ProfileImage } from "./ProfileImage";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
-function updateTextAreaSize(textArea : HTMLTextAreaElement){
-    if (textArea == null) return
+function updateTextAreaSize(textArea : HTMLTextAreaElement | undefined){
+    if (textArea == null || textArea==undefined) return;
     textArea.style.height = "0"
     textArea.style.height = `${textArea.scrollHeight}px`
 }
@@ -20,9 +20,7 @@ function Form() {
     }, []);
 
     useLayoutEffect(() => {
-        if (textAreaRef.current) {
-            updateTextAreaSize(textAreaRef.current);
-        }
+        updateTextAreaSize(textAreaRef.current);
     },[inputValue]);
 
     if(session.status !== "authenticated") return null;
