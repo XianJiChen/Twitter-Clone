@@ -2,7 +2,6 @@ import InfiniteScroll from "react-infinite-scroll-component"
 import { Tweet } from "./types/Tweet"
 import { TweetCard } from "./TweetCard"
 
-
 type InfiniteTweetListProps = {
     isLoading: boolean
     isError: boolean
