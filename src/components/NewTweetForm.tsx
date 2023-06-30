@@ -10,8 +10,6 @@ function updateTextAreaSize(textArea : HTMLTextAreaElement | undefined){
     textArea.style.height = `${textArea.scrollHeight}px`
 }
 
-
-
 function Form() {
     const session = useSession();
     const [inputValue, setInputValue] = useState("");
@@ -28,17 +26,14 @@ function Form() {
     
     const createTweet = api.tweet.create.useMutation({  onSuccess: 
         newTweet => {
-            console.log(newTweet);
             setInputValue("");
         }    
     })
-    
     
     if(session.status !== "authenticated") return null;
     
     function handleSubmit(e: FormEvent) {
         e.preventDefault()
-    
         createTweet.mutate({content: inputValue})
     }
 
