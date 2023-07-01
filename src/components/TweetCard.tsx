@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ProfileImage } from "./ProfileImage";
 import { Tweet } from "./types/Tweet";
 import { HeartButton } from "./HeartButton";
+import { api } from "~/utils/api";
 
 
 const dateTimeFormatter = Intl.DateTimeFormat(undefined, {dateStyle: "short"});
@@ -13,6 +14,47 @@ export function TweetCard({
     createdAt, 
     likeCount, 
     likedByMe}: Tweet) {
+
+    const trpcUtils = api.useContext()
+    const toggleLike = api.tweet.toggleLike.useMutation({ 
+        onSuccess: async ({ addedLike }) => {
+            //invalidates all my current data and refreshes all my data -> not ideal
+            // await trpcUtils.tweet.infiniteFeed.invalidate();
+            //[1] for getting the second param
+            const updateData: Parameters<typeof trpcUtils.tweet.infiniteFeed.setInfiniteData>[1]
+                = (oldData) => {
+                    if(oldData==null) return
+                    const countModifier = addedLike ? 1 : -1;
+
+                    return{
+                        ...oldData,
+                        pages: oldData.pages.map(page => {
+                            return {
+                                ...page,
+                                tweets: page.tweets.map(tweet => {
+                                    if(tweet.id === id){
+                                        return {
+                                             ...tweet,
+                                             likeCount: tweet.likeCount + countModifier,
+                                             likedByMe: addedLike,
+                                        }
+                                    }
+                                    return tweet;
+                                })
+                            }
+                        })
+                    }
+                }
+            
+            trpcUtils.tweet.infiniteFeed.setInfiniteData({}, updateData);
+
+        }
+    });
+
+    function handleToggleLike() {
+        toggleLike.mutate({ id })
+    }
+
     return (
         <li className="flex gap-4 border-b px-4 py-4">
             <Link href={`/profiles/${user.id}`}>
@@ -32,7 +74,7 @@ export function TweetCard({
                     </span>
                 </div>
                 <p className="whitespace-pre-wrap">{content}</p>
-                <HeartButton likedByMe={likedByMe} likeCount={likeCount}/>
+                <HeartButton onClick={handleToggleLike} isLoading = {toggleLike.isLoading} likedByMe={likedByMe} likeCount={likeCount}/>
             </div>
         </li>
     )
