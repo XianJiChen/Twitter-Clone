@@ -45,7 +45,7 @@ export function TweetCard({
                         })
                     }
                 }
-            
+            //by doing this way, we can only update the data without refetching them again.
             trpcUtils.tweet.infiniteFeed.setInfiniteData({}, updateData);
 
         }
