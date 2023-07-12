@@ -1,23 +1,24 @@
 import InfiniteScroll from "react-infinite-scroll-component"
 import { Tweet } from "./types/Tweet"
 import { TweetCard } from "./TweetCard"
+import { LoadingSpinner } from "./LoadingSpinner";
 
 type InfiniteTweetListProps = {
-    isLoading: boolean
-    isError: boolean
-    hasMore: boolean
-    fetchNewTweet: () => Promise<unknown>
-    tweets?: Tweet[]
+    isLoading: boolean;
+    isError: boolean;
+    hasMore: boolean ;
+    fetchNewTweets: () => Promise<unknown>;
+    tweets?: Tweet[];
 }
 
 export function InfiniteTweetList ({
     tweets, 
     isError, 
     isLoading, 
-    fetchNewTweet, 
-    hasMore
+    fetchNewTweets, 
+    hasMore,// = false,
 }: InfiniteTweetListProps) {
-    if(isLoading) return <h1>Loading</h1>
+    if(isLoading) return <LoadingSpinner/>//<h1>Loading</h1>
     if(isError) return <h1>Error</h1>
     if(tweets == null) return null
 
@@ -30,9 +31,10 @@ export function InfiniteTweetList ({
     return <ul>
         <InfiniteScroll
             dataLength={tweets.length}
-            next={fetchNewTweet}
+            next={fetchNewTweets}
             hasMore={hasMore}
-            loader={"Loading..."}
+            // loader={"Loading..."}
+            loader={<LoadingSpinner/>}
         >
             {tweets.map((tweet) => {
                 return <TweetCard key={tweet.id} {...tweet}/>

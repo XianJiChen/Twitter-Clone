@@ -1,9 +1,9 @@
 import { api } from "~/utils/api"
 import { InfiniteTweetList } from "./InfiniteTweetList";
 
-export function RecentTweets () {
+export function FollowingTweets () {
     const tweets = api.tweet.infiniteFeed.useInfiniteQuery(
-        {},
+        { onlyFollowing: true},
         { getNextPageParam: (lastPage) => lastPage.nextCursor }
       );
     
