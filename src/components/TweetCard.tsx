@@ -15,7 +15,7 @@ export function TweetCard({
     likeCount, 
     likedByMe}: Tweet) {
 
-    const trpcUtils = api.useContext()
+    const trpcUtils = api.useContext();
     const toggleLike = api.tweet.toggleLike.useMutation({ 
         onSuccess: async ({ addedLike }) => {
             //invalidates all my current data and refreshes all my data -> not ideal
@@ -45,9 +45,16 @@ export function TweetCard({
                         })
                     }
                 }
-            //by doing this way, we can only update the data without refetching them again.
+            //by doing this way, we can update the data without refetching them again.
             trpcUtils.tweet.infiniteFeed.setInfiniteData({}, updateData);
-
+            trpcUtils.tweet.infiniteFeed.setInfiniteData(
+                { onlyFollowing: true },
+                updateData
+            );
+            trpcUtils.tweet.infiniteProfileFeed.setInfiniteData(
+                { userId: user.id },
+                updateData
+            );
         }
     });
 
